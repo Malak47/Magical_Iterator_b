@@ -54,7 +54,8 @@ namespace ariel {
             virtual bool operator>(const Iterator& other) const = 0;
             virtual bool operator<(const Iterator& other) const = 0;
 
-            IteratorType getType() const { return iterType;};
+            virtual IteratorType getType() const = 0; // pure virtual function
+
         };
 
         //********************************************************************************
@@ -95,6 +96,9 @@ namespace ariel {
 
             MagicalContainer getContainer() const;
             size_t getIndex() const;
+            IteratorType getType() const override { return IteratorType::ASCENDING; }
+
+
         };
 
         //********************************************************************************
@@ -105,6 +109,8 @@ namespace ariel {
         private:
             MagicalContainer *container;
             size_t frontIndex, backIndex;
+            int increments = 0; // Number of times the iterator has been incremented.
+
         public:
             SideCrossIterator();
             SideCrossIterator(MagicalContainer &container);
@@ -137,6 +143,8 @@ namespace ariel {
             MagicalContainer getContainer() const;
             size_t getFrontIndex() const;
             size_t getBackIndex() const;
+            IteratorType getType() const override { return IteratorType::SIDE_CROSS; }
+
 
         };
 
@@ -147,11 +155,12 @@ namespace ariel {
         class PrimeIterator : public Iterator{
         private:
             MagicalContainer *container;
-            int index;
+            size_t index;
 
         public:
             PrimeIterator();
             PrimeIterator(MagicalContainer &container);
+            PrimeIterator(MagicalContainer &container, size_t index);
             PrimeIterator(const PrimeIterator &other);
             ~PrimeIterator() override;
             PrimeIterator(PrimeIterator &&) noexcept = delete;
@@ -177,7 +186,9 @@ namespace ariel {
             PrimeIterator end();
 
             MagicalContainer getContainer() const;
-            int getIndex() const;
+            size_t getIndex() const;
+            IteratorType getType() const override { return IteratorType::PRIME; }
+
         };
     };
 }

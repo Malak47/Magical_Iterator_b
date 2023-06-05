@@ -8,18 +8,18 @@
 using namespace ariel;
 
 MagicalContainer::SideCrossIterator::SideCrossIterator() : Iterator(IteratorType::SIDE_CROSS), frontIndex(0),
-                                                           backIndex(container->size() - 1),
-                                                           container(new MagicalContainer()) {}
+                                                           backIndex(container.size() - 1),
+                                                           container(*new MagicalContainer()) {}
 
 MagicalContainer::SideCrossIterator::SideCrossIterator(MagicalContainer &container) : Iterator(
-        IteratorType::SIDE_CROSS), frontIndex(0), backIndex(container.size() - 1), container(&container) {
+        IteratorType::SIDE_CROSS), frontIndex(0), backIndex(container.size() - 1), container(container) {
     if (container.size() == 0) {
         backIndex = 0;
     }
 }
 
-MagicalContainer::SideCrossIterator::SideCrossIterator(MagicalContainer &container, size_t fronIndex, size_t backIndex)
-        : Iterator(IteratorType::SIDE_CROSS), frontIndex(fronIndex), backIndex(backIndex), container(&container) {
+MagicalContainer::SideCrossIterator::SideCrossIterator(MagicalContainer &container, size_t frontIndex, size_t backIndex)
+        : Iterator(IteratorType::SIDE_CROSS), frontIndex(frontIndex), backIndex(backIndex), container(container) {
 }
 
 MagicalContainer::SideCrossIterator::SideCrossIterator(const SideCrossIterator &other) : Iterator(
@@ -30,7 +30,7 @@ MagicalContainer::SideCrossIterator::~SideCrossIterator() = default;
 
 MagicalContainer::SideCrossIterator &MagicalContainer::SideCrossIterator::operator=(const SideCrossIterator &other) {
     if (this != &other) {
-        if (container != other.container) {
+        if (&container != &other.container) {
             throw runtime_error("Error with operator=(): Iterators belong to different containers.");
         }
         frontIndex = other.frontIndex;
@@ -40,7 +40,7 @@ MagicalContainer::SideCrossIterator &MagicalContainer::SideCrossIterator::operat
 }
 
 bool MagicalContainer::SideCrossIterator::operator==(const SideCrossIterator &other) const {
-    if (container != other.container) {
+    if (&container != &other.container) {
         throw runtime_error("Error with operator==(): Iterators belong to different containers.");
     }
     return (frontIndex == other.frontIndex && backIndex == other.backIndex);
@@ -51,7 +51,7 @@ bool MagicalContainer::SideCrossIterator::operator!=(const SideCrossIterator &ot
 }
 
 bool MagicalContainer::SideCrossIterator::operator>(const SideCrossIterator &other) const {
-    if (container != other.container) {
+    if (&container != &other.container) {
         throw runtime_error("Error with operator>(): Iterators belong to different containers.");
     }
     // The iterator closer to the middle is considered "greater"
@@ -59,7 +59,7 @@ bool MagicalContainer::SideCrossIterator::operator>(const SideCrossIterator &oth
 }
 
 bool MagicalContainer::SideCrossIterator::operator<(const SideCrossIterator &other) const {
-    if (container != other.container) {
+    if (&container != &other.container) {
         throw runtime_error("Error with operator<(): Iterators belong to different containers.");
     }
     // The iterator closer to the start/end is considered "lesser"
@@ -68,9 +68,6 @@ bool MagicalContainer::SideCrossIterator::operator<(const SideCrossIterator &oth
 
 
 MagicalContainer::SideCrossIterator &MagicalContainer::SideCrossIterator::operator++() {
-    if (container == nullptr) {
-        throw runtime_error("Error with operator++(): Iterator is not initialized.");
-    }
     if (frontIndex > backIndex) {
         throw runtime_error("Error with operator++(): Iterator has reached its end.");
     }
@@ -86,40 +83,34 @@ MagicalContainer::SideCrossIterator &MagicalContainer::SideCrossIterator::operat
 }
 
 int MagicalContainer::SideCrossIterator::operator*() const {
-    if (container == nullptr) {
-        throw runtime_error("Error with operator*(): Iterator is not initialized.");
-    }
     if (frontIndex > backIndex) {
         throw runtime_error("Error with operator*(): Iterator has reached its end.");
     }
     // If we are at an even count of increments, we return from the front.
     // Otherwise, we return from the back.
     if (increments % 2 == 0) {
-        return container->vecElements[frontIndex];
+        return container.vecElements[frontIndex];
     } else {
-        return container->vecElements[backIndex];
+        return container.vecElements[backIndex];
     }
 }
 
 
 MagicalContainer::SideCrossIterator MagicalContainer::SideCrossIterator::begin() {
-    return {*container, 0, container->size() - 1};
+    return {container, 0, container.size() - 1};
 }
 
 MagicalContainer::SideCrossIterator MagicalContainer::SideCrossIterator::end() {
-    if (container == nullptr) {
-        throw runtime_error("Error with end(): Iterator is not initialized.");
-    }
-    size_t mid = (container->size() + 1) / 2;
+    size_t mid = (container.size() + 1) / 2;
     if (mid == 0) {
-        return {*container, mid, mid};
+        return {container, mid, mid};
     }
-    return {*container, mid, mid - 1};
+    return {container, mid, mid - 1};
 }
 
 
-MagicalContainer MagicalContainer::SideCrossIterator::getContainer() const {
-    return *container;
+MagicalContainer &MagicalContainer::SideCrossIterator::getContainer() const {
+    return container;
 }
 
 size_t MagicalContainer::SideCrossIterator::getFrontIndex() const {

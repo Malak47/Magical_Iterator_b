@@ -7,13 +7,13 @@
 
 using namespace ariel;
 
-MagicalContainer::PrimeIterator::PrimeIterator() : Iterator(IteratorType::PRIME) ,index(0), container(new MagicalContainer()) {}
+MagicalContainer::PrimeIterator::PrimeIterator() : Iterator(IteratorType::PRIME) ,index(0), container(*new MagicalContainer()) {}
 
-MagicalContainer::PrimeIterator::PrimeIterator(MagicalContainer &container) : Iterator(IteratorType::PRIME), index(0), container(&container) {
+MagicalContainer::PrimeIterator::PrimeIterator(MagicalContainer &container) : Iterator(IteratorType::PRIME), index(0), container(container) {
 }
 
 MagicalContainer::PrimeIterator::PrimeIterator(MagicalContainer &container, size_t index) : Iterator(IteratorType::PRIME), index(index),
-                                                                                            container(&container) {}
+                                                                                            container(container) {}
 
 MagicalContainer::PrimeIterator::PrimeIterator(const PrimeIterator &other) : Iterator(IteratorType::PRIME), index(other.index),
                                                                              container(other.container) {}
@@ -22,7 +22,7 @@ MagicalContainer::PrimeIterator::~PrimeIterator() = default;
 
 MagicalContainer::PrimeIterator &MagicalContainer::PrimeIterator::operator=(const PrimeIterator &other) {
     if (this != &other) {
-        if (container != other.container) {
+        if (&container != &other.container) {
             throw runtime_error("Error with operator=(): Iterators belong to different containers.");
         }
         index = other.index;
@@ -31,7 +31,7 @@ MagicalContainer::PrimeIterator &MagicalContainer::PrimeIterator::operator=(cons
 }
 
 bool MagicalContainer::PrimeIterator::operator==(const PrimeIterator &other) const {
-    if (container != other.container) {
+    if (&container != &other.container) {
         throw runtime_error("Error with operator==(): Iterators belong to different containers.");
     }
     return index == other.index;
@@ -42,7 +42,7 @@ bool MagicalContainer::PrimeIterator::operator!=(const PrimeIterator &other) con
 }
 
 bool MagicalContainer::PrimeIterator::operator>(const PrimeIterator &other) const {
-    if (container != other.container) {
+    if (&container != &other.container) {
         throw runtime_error("Error with operator>(): Iterators belong to different containers.");
     }
     return index > other.index;
@@ -54,29 +54,29 @@ bool MagicalContainer::PrimeIterator::operator<(const PrimeIterator &other) cons
 }
 
 int MagicalContainer::PrimeIterator::operator*() const {
-    if (index < 0 || index >= container->vecPrime.size()) {
+    if (index < 0 || index >= container.vecPrime.size()) {
         throw runtime_error("Error with operator*(): Iterator out of range.");
     }
-    return container->vecPrime[index];
+    return container.vecPrime[index];
 }
 
 MagicalContainer::PrimeIterator &MagicalContainer::PrimeIterator::operator++() {
-    if (++index > container->vecPrime.size()) {
+    if (++index > container.vecPrime.size()) {
         throw runtime_error("Error with operator++(): Iterator incremented beyond end of container.");
     }
     return *this;
 }
 
 MagicalContainer::PrimeIterator MagicalContainer::PrimeIterator::begin() {
-    return PrimeIterator(*container, 0);
+    return PrimeIterator(container, 0);
 }
 
 MagicalContainer::PrimeIterator MagicalContainer::PrimeIterator::end() {
-    return PrimeIterator(*container, container->vecPrime.size());
+    return PrimeIterator(container, container.vecPrime.size());
 }
 
-MagicalContainer MagicalContainer::PrimeIterator::getContainer() const {
-    return *container;
+MagicalContainer &MagicalContainer::PrimeIterator::getContainer() const {
+    return container;
 }
 
 size_t MagicalContainer::PrimeIterator::getIndex() const {

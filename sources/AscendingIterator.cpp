@@ -7,16 +7,16 @@
 using namespace ariel;
 
 MagicalContainer::AscendingIterator::AscendingIterator() : Iterator(IteratorType::ASCENDING), index(0),
-                                                           container(new MagicalContainer()) {}
+                                                           container(*new MagicalContainer()) {}
 
 MagicalContainer::AscendingIterator::AscendingIterator(MagicalContainer &container) : Iterator(IteratorType::ASCENDING),
-                                                                                      index(0), container(&container) {}
+                                                                                      index(0), container(container) {}
 
 MagicalContainer::AscendingIterator::AscendingIterator(MagicalContainer &container, size_t index) : Iterator(
         IteratorType::ASCENDING),
                                                                                                     index(index),
                                                                                                     container(
-                                                                                                            &container) {
+                                                                                                            container) {
 }
 
 MagicalContainer::AscendingIterator::AscendingIterator(const AscendingIterator &other) : Iterator(
@@ -26,7 +26,7 @@ MagicalContainer::AscendingIterator::~AscendingIterator() = default;
 
 MagicalContainer::AscendingIterator &MagicalContainer::AscendingIterator::operator=(const AscendingIterator &other) {
     if (this != &other) {
-        if (container != other.container) {
+        if (&container != &other.container) {
             throw runtime_error("Error with operator=(): Iterators belong to different containers.");
         }
         index = other.index;
@@ -35,7 +35,7 @@ MagicalContainer::AscendingIterator &MagicalContainer::AscendingIterator::operat
 }
 
 bool MagicalContainer::AscendingIterator::operator==(const AscendingIterator &other) const {
-    if (container != other.container) {
+    if (&container != &other.container) {
         throw runtime_error("Error with operator==(): Iterators belong to different containers.");
     }
     return index == other.index;
@@ -46,7 +46,7 @@ bool MagicalContainer::AscendingIterator::operator!=(const AscendingIterator &ot
 }
 
 bool MagicalContainer::AscendingIterator::operator>(const AscendingIterator &other) const {
-    if (container != other.container) {
+    if (&container != &other.container) {
         throw runtime_error("Error with operator>(): Iterators belong to different containers.");
     }
     return index > other.index;
@@ -58,29 +58,29 @@ bool MagicalContainer::AscendingIterator::operator<(const AscendingIterator &oth
 }
 
 int MagicalContainer::AscendingIterator::operator*() const {
-    if (index < 0 || index >= container->size()) {
+    if (index < 0 || index >= container.size()) {
         throw runtime_error("Error with operator*(): Iterator out of range.");
     }
-    return container->vecElements[index];
+    return container.vecElements[index];
 }
 
 MagicalContainer::AscendingIterator &MagicalContainer::AscendingIterator::operator++() {
-    if (++index > container->size()) {
+    if (++index > container.size()) {
         throw runtime_error("Error with operator++(): Iterator incremented beyond end of container.");
     }
     return *this;
 }
 
 MagicalContainer::AscendingIterator MagicalContainer::AscendingIterator::begin() {
-    return AscendingIterator(*container, 0);
+    return AscendingIterator(container, 0);
 }
 
 MagicalContainer::AscendingIterator MagicalContainer::AscendingIterator::end() {
-    return AscendingIterator(*container, container->size());
+    return AscendingIterator(container, container.size());
 }
 
-MagicalContainer MagicalContainer::AscendingIterator::getContainer() const {
-    return *container;
+MagicalContainer &MagicalContainer::AscendingIterator::getContainer() const {
+    return container;
 }
 
 size_t MagicalContainer::AscendingIterator::getIndex() const {

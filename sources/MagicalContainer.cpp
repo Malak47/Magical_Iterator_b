@@ -14,15 +14,14 @@ void MagicalContainer::addElement(int element) {
 }
 
 void MagicalContainer::removeElement(int element) {
-    //prime
     if (isPrime(element)) {
-        auto it = std::lower_bound(vecPrime.begin(), vecPrime.end(), element);
+        auto it = lower_bound(vecPrime.begin(), vecPrime.end(), element); // element <= ...
         if (it != vecPrime.end() && *it == element) {
             vecPrime.erase(it);
         }
     }
 
-    auto it = std::lower_bound(vecElements.begin(), vecElements.end(), element);
+    auto it = std::lower_bound(vecElements.begin(), vecElements.end(), element); // element <= ...
     if (it != vecElements.end() && *it == element) {
         vecElements.erase(it);
         return;
@@ -34,12 +33,12 @@ size_t MagicalContainer::size() const { return vecElements.size(); }
 
 void MagicalContainer::addAndSortElements(int element) {
     if (isPrime(element)) {
-        auto it = lower_bound(vecPrime.begin(), vecPrime.end(), element);
+        auto it = lower_bound(vecPrime.begin(), vecPrime.end(), element); // element <= ...
         if (it == vecPrime.end() || *it != element) {
             vecPrime.insert(it, element);
         }
     }
-    auto it = lower_bound(vecElements.begin(), vecElements.end(), element);
+    auto it = lower_bound(vecElements.begin(), vecElements.end(), element); // element <= ...
     if (it == vecElements.end() || *it != element) {
         vecElements.insert(it, element);
     }
@@ -64,4 +63,8 @@ bool MagicalContainer::isPrime(int number) {
         }
     }
     return true;
+}
+
+const vector<int> &MagicalContainer::getElements() const {
+    return vecElements;
 }

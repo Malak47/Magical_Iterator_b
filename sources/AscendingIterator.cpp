@@ -25,7 +25,7 @@ MagicalContainer::AscendingIterator::AscendingIterator(const AscendingIterator &
 MagicalContainer::AscendingIterator::~AscendingIterator() = default;
 
 MagicalContainer::AscendingIterator &MagicalContainer::AscendingIterator::operator=(const AscendingIterator &other) {
-    if (this != &other) {
+    if (*this != other) {
         if (&container != &other.container) {
             throw runtime_error("Error with operator=(): Iterators belong to different containers.");
         }

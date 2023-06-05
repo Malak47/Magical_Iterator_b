@@ -21,7 +21,7 @@ MagicalContainer::PrimeIterator::PrimeIterator(const PrimeIterator &other) : Ite
 MagicalContainer::PrimeIterator::~PrimeIterator() = default;
 
 MagicalContainer::PrimeIterator &MagicalContainer::PrimeIterator::operator=(const PrimeIterator &other) {
-    if (this != &other) {
+    if (*this != other) {
         if (&container != &other.container) {
             throw runtime_error("Error with operator=(): Iterators belong to different containers.");
         }

@@ -29,7 +29,7 @@ MagicalContainer::SideCrossIterator::SideCrossIterator(const SideCrossIterator &
 MagicalContainer::SideCrossIterator::~SideCrossIterator() = default;
 
 MagicalContainer::SideCrossIterator &MagicalContainer::SideCrossIterator::operator=(const SideCrossIterator &other) {
-    if (this != &other) {
+    if (*this != other) {
         if (&container != &other.container) {
             throw runtime_error("Error with operator=(): Iterators belong to different containers.");
         }

@@ -88,7 +88,7 @@ size_t MagicalContainer::AscendingIterator::getIndex() const {
 }
 
 bool MagicalContainer::AscendingIterator::operator==(const MagicalContainer::Iterator &other) const {
-    if (this->getType() != other.getType()) {
+    if (this->getIterType() != other.getIterType()) {
         throw runtime_error("Error with operator==(): Iterators belong to different containers.");
     }
     const auto &otherAscendingIterator = dynamic_cast<const AscendingIterator &>(other);
@@ -96,7 +96,7 @@ bool MagicalContainer::AscendingIterator::operator==(const MagicalContainer::Ite
 }
 
 bool MagicalContainer::AscendingIterator::operator!=(const MagicalContainer::Iterator &other) const {
-    if (this->getType() != other.getType()) {
+    if (this->getIterType() != other.getIterType()) {
         throw runtime_error("Error with operator!=(): Iterators belong to different containers.");
     }
     const auto &otherAscendingIterator = dynamic_cast<const AscendingIterator &>(other);
@@ -104,7 +104,7 @@ bool MagicalContainer::AscendingIterator::operator!=(const MagicalContainer::Ite
 }
 
 bool MagicalContainer::AscendingIterator::operator>(const MagicalContainer::Iterator &other) const {
-    if (this->getType() != other.getType()) {
+    if (this->getIterType() != other.getIterType()) {
         throw runtime_error("Error with operator>(): Iterators belong to different containers.");
     }
     const auto &otherAscendingIterator = dynamic_cast<const AscendingIterator &>(other);
@@ -112,7 +112,7 @@ bool MagicalContainer::AscendingIterator::operator>(const MagicalContainer::Iter
 }
 
 bool MagicalContainer::AscendingIterator::operator<(const MagicalContainer::Iterator &other) const {
-    if (this->getType() != other.getType()) {
+    if (this->getIterType() != other.getIterType()) {
         throw runtime_error("Error with operator<(): Iterators belong to different containers.");
     }
     const auto &otherAscendingIterator = dynamic_cast<const AscendingIterator &>(other);

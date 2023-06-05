@@ -17,29 +17,26 @@ namespace ariel {
     private:
         vector<int> vecElements;
         vector<int> vecPrime;
+        void addAndSortElements(int element);
+        static bool isPrime(int number);
 
     public:
         MagicalContainer();
-
         void addElement(int element);
         void removeElement(int element);
         size_t size() const;
-        vector<int> getElements();
-
-        void addAndSortElements(int element);
-        static bool isPrime(int number);
 
         //********************************************************************************
         //********** I T E R A T O R   I N T E R F A C E *********************************
         //********************************************************************************
-        enum class IteratorType { ASCENDING, SIDE_CROSS, PRIME, UNDEFINED };
+
+        enum class IteratorType { ASCENDING, SIDE_CROSS, PRIME };
 
         class Iterator {
-        protected:
+        private:
             IteratorType iterType;
         public:
-            Iterator() : iterType(IteratorType::UNDEFINED){};
-            Iterator( IteratorType iterType) : iterType(iterType){};
+            Iterator(IteratorType iterType) : iterType(iterType){};
 
             virtual ~Iterator() = default;
 
@@ -54,8 +51,7 @@ namespace ariel {
             virtual bool operator>(const Iterator& other) const = 0;
             virtual bool operator<(const Iterator& other) const = 0;
 
-            virtual IteratorType getType() const = 0; // pure virtual function
-
+             IteratorType getIterType() const {return iterType;};
         };
 
         //********************************************************************************
@@ -96,8 +92,6 @@ namespace ariel {
 
             MagicalContainer getContainer() const;
             size_t getIndex() const;
-            IteratorType getType() const override { return IteratorType::ASCENDING; }
-
 
         };
 
@@ -107,9 +101,11 @@ namespace ariel {
 
         class SideCrossIterator : public Iterator {
         private:
+            int count = 0;
+
             MagicalContainer *container;
             size_t frontIndex, backIndex;
-            int increments = 0; // Number of times the iterator has been incremented.
+            int increments = 0;
 
         public:
             SideCrossIterator();
@@ -143,9 +139,6 @@ namespace ariel {
             MagicalContainer getContainer() const;
             size_t getFrontIndex() const;
             size_t getBackIndex() const;
-            IteratorType getType() const override { return IteratorType::SIDE_CROSS; }
-
-
         };
 
         //********************************************************************************
@@ -187,8 +180,6 @@ namespace ariel {
 
             MagicalContainer getContainer() const;
             size_t getIndex() const;
-            IteratorType getType() const override { return IteratorType::PRIME; }
-
         };
     };
 }

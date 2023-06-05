@@ -32,8 +32,6 @@ void MagicalContainer::removeElement(int element) {
 
 size_t MagicalContainer::size() const { return vecElements.size(); }
 
-vector<int> MagicalContainer::getElements() { return vecElements; }
-
 void MagicalContainer::addAndSortElements(int element) {
     if (isPrime(element)) {
         auto it = lower_bound(vecPrime.begin(), vecPrime.end(), element);
